@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang='en'>
+    <head>
+        <meta charset="UTF-8">
+        <title>
+           Validation 
+        </title>
+        <link rel="stylesheet" href="css/app.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <div id="app">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 offset-md-3">
+                        <welcome></welcome>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"></script>
+        <script>    
+            let Login = {
+                data () {
+                    return {
+                        errorMessage: '',
+                        form: {
+                            email: '',
+                            password: ''
+                        }
+                    }
+                },
+                template: `
+                    <form action="#" @submit.prevent="submit">
+                        <div class="form-group">
+                            <label for="email" class="form-control-label">Email</label>  
+                            <input type="text" id="email" class="form-control" placeholder="e.g. user@example.com" v-model="form.email"/>    
+                        </div> 
+                        <div class="form-group">
+                            <label for="password" class="form-control-label">Password</label>  
+                            <input type="password" id="password" class="form-control" v-model="form.password"/>    
+                        </div>  
+                        <div class="form-group">
+                            {{this.errorMessage}}
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Login</button>
+
+                    </form>
+                `,
+                methods: {
+                    submit() {
+                        axios.post('http://localhost:8081/signinuser',this.form
+                        ).then((response)=> {
+                            console.log(response);
+                            this.errorMessage='';
+                        }).catch((error) => {
+                            console.log(error.response);
+                            this.errorMessage = error.response.data.error.message;
+                        })
+                    }
+                }
+            }
+
+            let Register = {
+                data () {
+                    return {
+                        errorMessage: '',
+                        form: {
+                            email: '',
+                            password: '',
+                            displayName:''
+                        }
+                    }
+                },
+                template: `
+                    <form action="#" @submit.prevent="submit">
+                        <div class="form-group">
+                            <label for="email" class="form-control-label">Email</label>  
+                            <input type="text" id="email" class="form-control" placeholder="e.g. user@example.com" v-model="form.email"/>    
+                        </div> 
+                        <div class="form-group">
+                            <label for="password" class="form-control-label">Password</label>  
+                            <input type="password" id="password" class="form-control" v-model="form.password"/>    
+                        </div>
+                        <div class="form-group">
+                            <label for="displayName" class="form-control-label">Display Name</label>  
+                            <input type="text" id="displayName" class="form-control" v-model="form.displayName"/>    
+                        </div>  
+  
+                        <button type="submit" class="btn btn-primary">Register</button>
+
+                    </form>
+                `,
+                methods: {
+                    submit() {
+                        axios.post('http://localhost:8081/createuser',this.form
+                        ).then((response)=> {
+                            console.log(response);
+                            this.errorMessage='';
+                        }).catch((error) => {
+                            console.log(error.response);
+                            this.errorMessage = error.response.data.error.message;
+                        })
+                    }
+                }
+            }
+
+            let Welcome = {
+                template: `
+                    <template v-if="showWelcome"> 
+                        <div class="row mt-5">
+                            <div class="col-md-6 m-auto">
+                                <div class="card card-body text-center">
+                                <h1><i class="fab fa-node-js fa-3x"></i></h1>
+                                <p>Create an account or login</p>
+                                <a href="#" class="btn btn-primary btn-block mb-2" @click.prevent="register"
+                                    >Register</a>
+                                <a href="#" class="btn btn-secondary btn-block" @click.prevent="login"
+                                    >Login</a>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                    <template v-else-if="showRegistration">
+                      <register></register>
+                    </template> 
+                    <template v-else>  
+                        <login></login>
+                    </template> 
+                `,
+                data() {
+                    return {
+                        showWelcome: true,
+                        showRegistration: false,
+                        showLogin: false,
+                    }
+                },
+                methods: {
+                    register() {
+                        this.showWelcome = false;
+                        this.showRegistration =  true;
+                        this.showLogin =  true;
+                    },
+                    login() {
+                        this.showWelcome = false;
+                        this.showRegistration =  false;
+                        this.showLogin =  true;
+                    }
+                },
+                components: {
+                    login: Login,
+                    register: Register
+                }
+            }
+
+            let app = new Vue({
+                el: '#app',
+                components: {
+                    welcome: Welcome
+                }
+            })
+        </script>
+    </body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "name": "vue-user-registration",
+  "version": "1.0.0",
+  "description": "Vue User Registration",
+  "main": "index.js",
+  "scripts": {
+    "start": "http-server .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Vue",
+    "Login",
+    "Registration"
+  ],
+  "author": "Thirupathy KS",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^0.12.3"
+  }
+}
