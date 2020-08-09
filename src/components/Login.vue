@@ -3,28 +3,24 @@
         <div class="form-group">
             <label for="email" class="form-control-label">Email</label>  
             <input type="text" id="email" class="form-control" placeholder="e.g. user@example.com" v-model="$v.email.$model"/>    
-            <div class="error" v-if="!$v.email.required">Field is required</div>
         </div> 
         <div class="form-group">
             <label for="password" class="form-control-label">Password</label>  
             <input type="password" id="password" class="form-control" v-model="$v.password.$model"/>    
-            <div class="error" v-if="!$v.password.required">Field is required</div>
-            <div class="error" v-if="!$v.password.minLength">Password must have at least {{$v.password.$params.minLength.min}} letters.</div>
-        </div>  
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+        <p class="typo__p" v-if="submitStatus === 'OK'">Successfully logged in!</p>
+        <p class="typo__p" v-if="submitStatus === 'ERROR'">Invalid data provided. Please correct before retrying!</p>
+        <p class="typo__p" v-if="submitStatus === 'PENDING'">Sending...</p>
         <div class="form-group">
             {{this.errorMessage}}
         </div>
-
-        <button type="submit" class="btn btn-primary">Login</button>
-        <p class="typo__p" v-if="submitStatus === 'OK'">Successfully logged in!</p>
-        <p class="typo__p" v-if="submitStatus === 'ERROR'">Please fill the form correctly.</p>
-        <p class="typo__p" v-if="submitStatus === 'PENDING'">Sending...</p>
     </form>   
 </template>
 
 <script>
 import axios from 'axios';
-import { required, minLength } from 'vuelidate/lib/validators';
+import { required, email, minLength } from 'vuelidate/lib/validators';
 
 export default {
     name: 'Login',
@@ -38,7 +34,8 @@ export default {
     },
     validations: {
         email: {
-            required
+            required,
+            email
         },
         password: {
             required,
@@ -46,12 +43,6 @@ export default {
         }
     },
     methods: {
-        status(validation) {
-            return {
-                error: validation.$error,
-                dirty: validation.$dirty
-            }
-        },
         submit() {
             this.$v.$touch()
             if (this.$v.$invalid) {
