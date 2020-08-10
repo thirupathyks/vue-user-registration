@@ -2,21 +2,21 @@
     <form action="#" @submit.prevent="submit">
         <div class="form-group">
             <label for="email" class="form-control-label">Email</label>  
-            <input type="text" id="email" class="form-control" placeholder="e.g. user@example.com" v-model="$v.email.$model"/>    
-            <div class="error" v-if="!$v.email.required">Field is required</div>
-            <div class="error" v-if="!$v.email.email">Invalid Email ID</div>
+            <input type="text" id="email" class="form-control" placeholder="e.g. user@example.com" v-model="$v.email.$model" v-on:keyup="handleChange"/>    
+            <div class="error" v-if="(!$v.email.required) && (submitStatus === 'ERROR')">Field is required</div>
+            <div class="error" v-if="(!$v.email.email) && (submitStatus === 'ERROR')">Invalid Email ID</div>
         </div> 
         <div class="form-group">
             <label for="password" class="form-control-label">Password</label>  
-            <input type="password" id="password" class="form-control" v-model="$v.password.$model"/>    
-            <div class="error" v-if="!$v.password.required">Field is required</div>
-            <div class="error" v-if="!$v.password.minLength">Password must have at least {{$v.password.$params.minLength.min}} letters.</div>
+            <input type="password" id="password" class="form-control" v-model="$v.password.$model" v-on:keyup="handleChange"/>    
+            <div class="error" v-if="(!$v.password.required) && (submitStatus === 'ERROR' )">Field is required</div>
+            <div class="error" v-if="(!$v.password.minLength) && (submitStatus === 'ERROR' )">Password must have at least {{$v.password.$params.minLength.min}} letters.</div>
         </div>
         <div class="form-group">
             <label for="displayName" class="form-control-label">Display Name</label>  
-            <input type="text" id="displayName" class="form-control" v-model="$v.displayName.$model"/>    
-            <div class="error" v-if="!$v.displayName.required">Field is required</div>
-            <div class="error" v-if="!$v.displayName.minLength">Name must have at least {{$v.displayName.$params.minLength.min}} letters.</div>
+            <input type="text" id="displayName" class="form-control" v-model="$v.displayName.$model" v-on:keyup="handleChange"/>    
+            <div class="error" v-if="(!$v.displayName.required) && (submitStatus === 'ERROR')">Field is required</div>
+            <div class="error" v-if="(!$v.displayName.minLength) && (submitStatus === 'ERROR')">Name must have at least {{$v.displayName.$params.minLength.min}} letters.</div>
         </div>  
         <button type="submit" class="btn btn-primary">Register</button>
         <p class="typo__p" v-if="submitStatus === 'OK'">Registration Completed!</p>
@@ -76,6 +76,9 @@ export default {
                     this.errorMessage = error.response.data.error.message;
                 })
             }
+        },
+        handleChange() {
+            this.submitStatus = null;
         }
     }
 }
